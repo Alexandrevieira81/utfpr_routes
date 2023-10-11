@@ -27,12 +27,12 @@
 				message: returnLogin?.data?.message
 			};
 			sessionStorage.setItem('user', JSON.stringify(userReturn));
-			sessionStorage.setItem('token', returnLogin?.data?.token);
+			sessionStorage.setItem('token', returnLogin.data.token);
             console.log(userReturn);
 
-			setTimeout(() => {
-				goto('/');
-			}, 2000);
+			//setTimeout(() => {
+				//goto('/');
+			//}, 2000);
 		}
 	};
 

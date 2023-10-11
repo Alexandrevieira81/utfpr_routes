@@ -15,7 +15,9 @@ export const loginUser = async (user) => {
 export const deslogarUser = async () => {
     try {
         const token = sessionStorage.getItem('token')
-        let res = await axios.post('http://127.0.0.1:3000/logout', { headers: { Authorization: `Bearer ${token}` }});
+        console.log("pegou o token "+token);
+        let res = await axios.post('http://127.0.0.1:3000/logout',{}, { headers: { Authorization: token }});
+        //let res = await axios.get(host+'/users/'+id, { headers: { Authorization: `Bearer ${token}` } })
         return res
     } catch (error) {
         console.log("logout: "+ error);

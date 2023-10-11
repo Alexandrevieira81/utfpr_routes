@@ -1,12 +1,14 @@
 import axios from 'axios';
 
 export const buscarRotas = async (rota) => {
+
     try {
 
-
-        let res = await axios.get('http://127.0.0.1:3000/rotas/'+rota.inicio+'/'+rota.fim,{
+        const token = sessionStorage.getItem('token')
+        let res = await axios.get('http://127.0.0.1:3000/rotas/' + rota.inicio + '/' + rota.fim, {
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                Authorization: token
             }
         });
         return res
@@ -17,12 +19,14 @@ export const buscarRotas = async (rota) => {
 }
 
 export const buscarAllRotas = async (rota) => {
+
     try {
+        const token = sessionStorage.getItem('token')
 
-
-        let res = await axios.get('http://127.0.0.1:3000/selectRotasSemFiltro/'+rota.inicio+'/'+rota.fim,{
+        let res = await axios.get('http://127.0.0.1:3000/selectRotasSemFiltro/' + rota.inicio + '/' + rota.fim, {
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                Authorization: token
             }
         });
         return res
