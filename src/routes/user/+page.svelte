@@ -1,9 +1,10 @@
 <script>
-	import { cadastrarUser } from '../services/user.js';
+	import { cadastrarUser, buscarUser } from '../services/user.js';
 
 	let returnUser;
 	let userReturn = [];
 	let user = {};
+	let getId = {};
 
 	const cadastrar = async () => {
 		returnUser = null;
@@ -21,19 +22,62 @@
 			document.getElementById('resultado').innerHTML = returnUser.data.message;
 		}
 	};
+
+	const buscar = async () => {
+		returnUser = null;
+
+		console.log(user);
+
+		//post.password = md5(post.password);
+
+		returnUser = await buscarUser(getId.registro);
+		console.log(returnUser);
+		if (returnUser.status == 200) {
+			document.getElementById('resultado').innerHTML = returnUser.data.message;
+			let registro = document.getElementById('registro');
+			registro.value = returnUser.data.usuarios.registro;
+			registro.disabled = true;
+			let nome = document.getElementById('nome');
+			nome.value = returnUser.data.usuarios.nome;
+			nome.disabled = true;
+			let email = document.getElementById('email');
+			email.value = returnUser.data.usuarios.email;
+			email.disabled = true;
+			let senha = document.getElementById('senha');
+			senha.value = returnUser.data.usuarios.senha;
+			senha.disabled = true;
+			let tipo = document.getElementById('tipo');
+			tipo.value = returnUser.data.usuarios.tipo_usuario;
+			tipo.disabled = true;
+		} else {
+			document.getElementById('resultado').innerHTML = returnUser.data.message;
+		}
+	};
+
+	const novo = async () => {
+		let senha = document.getElementById('senha');
+		senha.disabled = false;
+	};
 </script>
 
 <section class="telaCadastroUsuario">
 	<div class="telaCadastroUsuario_wrapper usuario">
 		<h1>Welcome to the Jungle</h1>
+
+		<div>
+			<input type="text" name="" id="buscarRegistro" bind:value={getId.registro} />
+
+			<button class="button" on:click={() => buscar()}>Buscar</button>
+		</div>
+
 		<p style="margin-top: 2px;">Registro:</p>
-		<input type="text" name="" id="" placeholder="1488880" bind:value={user.registro} />
+		<input type="text" name="" id="registro" placeholder="1488880" bind:value={user.registro} />
 
 		<p style="margin-top: 20px;">Nome:</p>
 		<input
 			type="text"
 			name=""
-			id=""
+			id="nome"
 			style="margin-top: 2px;"
 			placeholder="123456"
 			bind:value={user.nome}
@@ -43,7 +87,7 @@
 		<input
 			type="text"
 			name=""
-			id=""
+			id="email"
 			style="margin-top: 2px;"
 			placeholder="123456"
 			bind:value={user.email}
@@ -53,7 +97,7 @@
 		<input
 			type="text"
 			name=""
-			id=""
+			id="senha"
 			style="margin-top: 2px;"
 			placeholder="123456"
 			bind:value={user.senha}
@@ -63,7 +107,7 @@
 		<input
 			type="number"
 			name=""
-			id=""
+			id="tipo"
 			style="margin-top: 2px;"
 			placeholder="123456"
 			bind:value={user.tipo_usuario}
@@ -75,7 +119,8 @@
 	</h2>
 
 	<div>
-		<button class="button" on:click={() => cadastrar()}>Cadastrar</button>
+		<button class="button" on:click={() => novo()}>Novo</button>
+		<button class="button" id="btnCadstrar" on:click={() => cadastrar()}>Cadastrar</button>
 	</div>
 </section>
 
