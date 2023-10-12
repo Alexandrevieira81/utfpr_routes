@@ -17,9 +17,12 @@
 		returnRotas = await buscarRotas(post);
 		console.log(returnRotas);
 		if (returnRotas.status == 200) {
-			rotaReturn = await returnRotas.data;
+			rotaReturn = await returnRotas.data.rota;
+			document.getElementById('resultado').innerHTML = returnRotas.data.message;
 
 			console.log(rotaReturn);
+		} else {
+			document.getElementById('resultado').innerHTML = returnRotas.data.message;
 		}
 	};
 
@@ -44,7 +47,7 @@
 	<div class="telarotas_wrapper rotas">
 		<h1>Welcome to the Jungle</h1>
 		<p style="margin-top: 2px;">INICIO:</p>
-		<input type="text" name="" id="" placeholder="Portaria" bind:value={buscaRotas.inicio} />
+		<input type="text" name="" id="" placeholder="Portaria" bind:value={buscaRotas.origem} />
 
 		<p style="margin-top: 20px;">FIM:</p>
 		<input
@@ -53,7 +56,7 @@
 			id=""
 			style="margin-top: 2px;"
 			placeholder="Capela"
-			bind:value={buscaRotas.fim}
+			bind:value={buscaRotas.destino}
 		/>
 	</div>
 	<table
@@ -84,6 +87,11 @@
 			{/each}
 		</tbody>
 	</table>
+
+	<h2>
+		<p id="resultado" />
+	</h2>
+
 	<div>
 		<button class="button" on:click={() => rota()}>Buscar Rota</button>
 	</div>
@@ -91,7 +99,6 @@
 	<div>
 		<button class="button" on:click={() => allRota()}>Buscar todas as Rotas</button>
 	</div>
-
 
 	<div>
 		<a href="/"> Sair</a>
