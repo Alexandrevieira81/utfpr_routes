@@ -24,3 +24,16 @@ export const deslogarUser = async () => {
         return error.response
     }
 }
+
+export const cadastrarUser= async (user) => {
+    console.log(user);
+    
+    try {
+        const token = sessionStorage.getItem('token')
+        let res = await axios.post('http://127.0.0.1:3000/usuarios', user, { headers: { Authorization: token }});
+        return res
+    } catch (error) {
+        console.log("login: "+ error);
+        return error.response
+    }
+}
