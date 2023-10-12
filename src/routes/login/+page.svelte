@@ -1,8 +1,7 @@
 <script>
 	import { goto } from '$app/navigation';
-
 	import { loginUser,deslogarUser } from '../services/user.js';
-	import { onMount } from 'svelte';
+	import md5 from 'md5';
 
 	let returnLogin;
 	let returnCadastro;
@@ -16,6 +15,7 @@
 		returnLogin = null;
 		returnCadastro = null;
 		let post = { ...userLogin };
+		post.senha = md5(post.senha);
 
 		//post.password = md5(post.password);
        

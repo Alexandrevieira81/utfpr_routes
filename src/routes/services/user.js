@@ -53,3 +53,32 @@ export const buscarUser = async (userRegistro) => {
         return error.response
     }
 }
+
+export const AtualizarUser = async (userRegistro) => {
+    console.log(userRegistro);
+
+    try {
+        const token = sessionStorage.getItem('token')
+        let res = await axios.put('http://127.0.0.1:3000/usuarios',userRegistro, { headers: { Authorization: token } });
+        return res
+    } catch (error) {
+        console.log(" ERRO GET USUARIO: " + error);
+        return error.response
+    }
+}
+
+export const DeletarUser = async (userRegistro) => {
+    console.log(userRegistro);
+
+    try {
+        const token = sessionStorage.getItem('token')
+        let res = await axios.delete('http://127.0.0.1:3000/usuarios/'+userRegistro, { headers: { Authorization: token } });
+        return res
+    } catch (error) {
+        console.log(" ERRO GET USUARIO: " + error);
+        return error.response
+    }
+}
+
+
+
