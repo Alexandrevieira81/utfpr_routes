@@ -96,11 +96,13 @@
 		<button class="button" on:click={() => rota()}>Buscar Rota</button>
 	</div>
 
-	<div>
+	<!-- 
+		<div>
 		<button class="button" on:click={() => allRota()}>Buscar todas as Rotas</button>
 	</div>
+	-->
 
 	<div>
-		<a href="/"> Sair</a>
+		<a href="/centralizadora">Voltar</a>
 	</div>
 </section>

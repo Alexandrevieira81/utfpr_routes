@@ -171,6 +171,9 @@
 		>
 		<button class="button" id="btnDeletar" type="button" on:click={() => deletar()}>Deletar</button>
 	</div>
+	<div>
+		<a href="/centralizadora">Voltar</a>
+	</div>
 </section>
 
 <style>

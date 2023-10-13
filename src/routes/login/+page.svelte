@@ -1,12 +1,12 @@
 <script>
 	import { goto } from '$app/navigation';
-	import { loginUser,deslogarUser } from '../services/user.js';
+	import { loginUser} from '../services/user.js';
 	import md5 from 'md5';
 
 	let returnLogin;
 	let returnCadastro;
-    let userLogin = {}
-/*
+	let userLogin = {};
+	/*
 	onMount(async () => {
 		if (sessionStorage.getItem('token')) goto('/');
 	});
@@ -18,54 +18,52 @@
 		post.senha = md5(post.senha);
 
 		//post.password = md5(post.password);
-       
 
 		returnLogin = await loginUser(post);
 		if (returnLogin.status == 200) {
 			var userReturn = {
-				success: returnLogin?.data?.success,
-				message: returnLogin?.data?.message
+				success: returnLogin.data.success,
+				message: returnLogin.data.message
 			};
 			sessionStorage.setItem('user', JSON.stringify(userReturn));
 			sessionStorage.setItem('token', returnLogin.data.token);
-            console.log(userReturn);
+			document.getElementById('resultado').innerHTML = userReturn.message;
 
-			//setTimeout(() => {
-				//goto('/');
-			//}, 2000);
+			setTimeout(() => {
+				goto('/centralizadora');
+			}, 2000);
+		} else {
+			document.getElementById('resultado').innerHTML = userReturn.message;
 		}
 	};
 
-    const deslogar = async () => {
-        var res = await deslogarUser();
-        if(res.status == 200 || res.status == 401) {
-            sessionStorage.removeItem('user');
-            sessionStorage.removeItem('token');
-            setTimeout(() => {
-				goto('/');
-			}, 2000);
-        }
-        console.log(res);
-    }
+
 </script>
 
 <section class="telalogin">
 	<div class="telalogin_wrapper login">
 		<h1>Welcome to the Jungle</h1>
+		<h2>
+			<p id="resultado" />
+		</h2>
 		<p style="margin-top: 2px;">Usuário:</p>
 		<input type="text" name="" id="" placeholder="1488880" bind:value={userLogin.registro} />
 
 		<p style="margin-top: 20px;">Senha:</p>
-		<input type="text" name="" id="" style="margin-top: 2px;" placeholder="123456" bind:value={userLogin.senha}
+		<input
+			type="text"
+			name=""
+			id=""
+			style="margin-top: 2px;"
+			placeholder="123456"
+			bind:value={userLogin.senha}
 		/>
 	</div>
 	<div>
 		<button class="button" on:click={() => logar()}>Logar</button>
 	</div>
 
-    <div>
-		<button class="button" on:click={() => deslogar()}>Deslogar</button>
-	</div>
+	
 </section>
 
 <style>
