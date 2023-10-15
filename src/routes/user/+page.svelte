@@ -34,7 +34,7 @@
 	};
 
 	const atualizar = async () => {
-		returnUser = null;
+		
 
 		let post = { ...user };
 
