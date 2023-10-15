@@ -2,10 +2,18 @@
 	import { goto } from '$app/navigation';
 
 	import { buscarRotas, buscarAllRotas } from '../services/rotas.js';
+	import { onMount } from 'svelte';
 
 	let returnRotas;
 	let rotaReturn = [];
 	let buscaRotas = {};
+	var canva =  null;
+	var ctx = null;
+	onMount(async () => {
+		canva = document.getElementById('rotaCanvas');
+		ctx = canva.getContext('2d');
+	});
+
 
 	const rota = async () => {
 		returnRotas = null;
@@ -21,6 +29,7 @@
 			document.getElementById('resultado').innerHTML = returnRotas.data.message;
 
 			console.log(rotaReturn);
+			desenharRota(rotaReturn);
 		} else {
 			document.getElementById('resultado').innerHTML = returnRotas.data.message;
 		}
@@ -43,14 +52,14 @@
 	};
 
 	const desenharRota = async (segmentos) => {
-		let canva = document.getElementById("rotaCanvas");
-		let ctx = canva.getContext('2d');
+		
+
 		var x = 75;
 		var y = 150;
-
+		ctx.clearRect(0, 0, 500, 500);
 		ctx.fillStyle = '#000';
-
-		ctx.moveTo(75,150);
+		ctx.beginPath();
+		ctx.moveTo(75, 150);
 
 		for (let i = 0; i < segmentos.length; i++) {
 			if (segmentos[i].direcao === 'frente') {
@@ -71,7 +80,8 @@
 			ctx.lineTo(x, y);
 
 			ctx.lineWidth = 5;
-			ctx.stroke();
+			
+			
 
 			/* 	if (segmentos[i].direcao == 'frente') {
 				ctx.fillStyle = '#000';
@@ -87,6 +97,8 @@
 				ctx.fillRect(50, 50, 100, 100);
 			} */
 		}
+		ctx.stroke();
+		ctx.closePath();
 		/*
 		if (segmento.direcao == 'frente') {
 	 		ctx.fillStyle = '#000';
@@ -121,7 +133,7 @@
 			bind:value={buscaRotas.destino}
 		/>
 	</div>
-	{desenharRota(rotaReturn)}
+
 	<table
 		class="table table-bordered table-striped"
 		width="100%"
