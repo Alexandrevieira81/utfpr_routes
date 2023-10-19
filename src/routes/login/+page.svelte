@@ -1,6 +1,6 @@
 <script>
 	import { goto } from '$app/navigation';
-	import { loginUser} from '../services/user.js';
+	import { loginUser } from '../services/user.js';
 	import md5 from 'md5';
 
 	let returnLogin;
@@ -16,16 +16,17 @@
 		returnCadastro = null;
 		let post = { ...userLogin };
 		post.senha = md5(post.senha);
+		var userReturn;
 
 		//post.password = md5(post.password);
 
 		returnLogin = await loginUser(post);
 		if (returnLogin.status == 200) {
-			var userReturn = {
+			userReturn = {
 				success: returnLogin.data.success,
 				message: returnLogin.data.message
 			};
-			sessionStorage.setItem('user', JSON.stringify(userReturn));
+			sessionStorage.setItem('user', JSON.stringify(userReturn)); //Aqui ainda só pega o status boleano e o msg de retorno
 			sessionStorage.setItem('token', returnLogin.data.token);
 			document.getElementById('resultado').innerHTML = userReturn.message;
 
@@ -33,11 +34,13 @@
 				goto('/centralizadora');
 			}, 2000);
 		} else {
+			userReturn = {
+				success: returnLogin.data.success,
+				message: returnLogin.data.message
+			};
 			document.getElementById('resultado').innerHTML = userReturn.message;
 		}
 	};
-
-
 </script>
 
 <section class="telalogin">
@@ -62,8 +65,6 @@
 	<div>
 		<button class="button" on:click={() => logar()}>Logar</button>
 	</div>
-
-	
 </section>
 
 <style>

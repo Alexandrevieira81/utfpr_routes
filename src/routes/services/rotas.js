@@ -8,10 +8,7 @@ export const buscarRotas = async (rota) => {
 
         
         let res = await axios.post('http://127.0.0.1:3000/rotas',rota, {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: token
-            }
+            headers: {"Content-Type": "application/json",Authorization: `Bearer ${token}`}
         });
         return res
     } catch (error) {
@@ -20,15 +17,15 @@ export const buscarRotas = async (rota) => {
     }
 }
 
-export const buscarAllRotas = async (rota) => {
+export const buscarAllRotas = async () => {
 
     try {
         const token = sessionStorage.getItem('token')
 
-        let res = await axios.get('http://127.0.0.1:3000/selectRotasSemFiltro/' + rota.inicio + '/' + rota.fim, {
+        let res = await axios.get('http://127.0.0.1:3000/rotas',{
             headers: {
                 "Content-Type": "application/json",
-                Authorization: token
+                Authorization: `Bearer ${token}`
             }
         });
         return res

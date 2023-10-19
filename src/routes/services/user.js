@@ -19,7 +19,7 @@ export const deslogarUser = async () => {
     try {
         const token = sessionStorage.getItem('token')
 
-        let res = await axios.post('http://127.0.0.1:3000/logout', {}, { headers: { Authorization: token } });
+        let res = await axios.post('http://127.0.0.1:3000/logout', {}, { headers: { Authorization: `Bearer ${token}`} });
         //let res = await axios.get(host+'/users/'+id, { headers: { Authorization: `Bearer ${token}` } })
         return res
     } catch (error) {
@@ -33,7 +33,7 @@ export const cadastrarUser = async (user) => {
 
     try {
         const token = sessionStorage.getItem('token')
-        let res = await axios.post('http://127.0.0.1:3000/usuarios', user, { headers: { Authorization: token } });
+        let res = await axios.post('http://127.0.0.1:3000/usuarios', user, { headers: { Authorization: `Bearer ${token}` } });
         return res
     } catch (error) {
         console.log("ERRO AO CADASTRAR: " + error);
@@ -46,7 +46,7 @@ export const buscarUser = async (userRegistro) => {
 
     try {
         const token = sessionStorage.getItem('token')
-        let res = await axios.get('http://127.0.0.1:3000/usuarios/'+userRegistro, { headers: { Authorization: token } });
+        let res = await axios.get('http://127.0.0.1:3000/usuarios/'+userRegistro, { headers: { Authorization: `Bearer ${token}` } });
         return res
     } catch (error) {
         console.log(" ERRO GET USUARIO: " + error);
@@ -59,7 +59,7 @@ export const AtualizarUser = async (userRegistro) => {
 
     try {
         const token = sessionStorage.getItem('token')
-        let res = await axios.put('http://127.0.0.1:3000/usuarios',userRegistro, { headers: { Authorization: token } });
+        let res = await axios.put('http://127.0.0.1:3000/usuarios',userRegistro, { headers: { Authorization: `Bearer ${token}` } });
         return res
     } catch (error) {
         console.log(" ERRO GET USUARIO: " + error);
@@ -72,7 +72,7 @@ export const DeletarUser = async (userRegistro) => {
 
     try {
         const token = sessionStorage.getItem('token')
-        let res = await axios.delete('http://127.0.0.1:3000/usuarios/'+userRegistro, { headers: { Authorization: token } });
+        let res = await axios.delete('http://127.0.0.1:3000/usuarios/'+userRegistro, { headers: { Authorization: `Bearer ${token}`} });
         return res
     } catch (error) {
         console.log(" ERRO GET USUARIO: " + error);

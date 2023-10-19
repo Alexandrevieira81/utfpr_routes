@@ -5,23 +5,29 @@
 	import { onMount } from 'svelte';
 
 	let returnRotas;
+	let returnAllRotas;
 	let rotaReturn = [];
+	let pontos = [];
 	let buscaRotas = {};
-	var canva =  null;
+	var canva = null;
 	var ctx = null;
 	onMount(async () => {
 		canva = document.getElementById('rotaCanvas');
 		ctx = canva.getContext('2d');
+		allRota();
 	});
-
 
 	const rota = async () => {
 		returnRotas = null;
 
 		let post = { ...buscaRotas };
+		const inicial = document.querySelector('#pontosIniciais');
+		const final = document.querySelector('#pontosFinais');
 
 		//post.password = md5(post.password);
 
+		post.origem = inicial.value;
+		post.destino = final.value;
 		returnRotas = await buscarRotas(post);
 		console.log(returnRotas);
 		if (returnRotas.status == 200) {
@@ -36,32 +42,30 @@
 	};
 
 	const allRota = async () => {
-		returnRotas = null;
-
-		let postr = { ...buscaRotas };
+		returnAllRotas = null;
 
 		//post.password = md5(post.password);
 
-		returnRotas = await buscarAllRotas(postr);
-		console.log(returnRotas);
-		if (returnRotas.status == 200) {
-			rotaReturn = await returnRotas.data;
+		returnAllRotas = await buscarAllRotas();
+		console.log(returnAllRotas);
+		if (returnAllRotas.status == 200) {
+			pontos = returnAllRotas.data;
 
-			console.log(rotaReturn);
+			console.log(pontos);
+			prencherPontosIniciais(pontos);
+			prencherPontosFinais(pontos);
 		}
 	};
 
 	const desenharRota = async (segmentos) => {
-		
-
 		var x = 75;
 		var y = 150;
 		ctx.clearRect(0, 0, 500, 500);
 		ctx.fillStyle = '#000';
 		ctx.beginPath();
-		ctx.moveTo(75, 150);
 
 		for (let i = 0; i < segmentos.length; i++) {
+			ctx.moveTo(x, y);
 			if (segmentos[i].direcao === 'frente') {
 				y = y - segmentos[i].distancia;
 			}
@@ -80,8 +84,8 @@
 			ctx.lineTo(x, y);
 
 			ctx.lineWidth = 5;
-			
-			
+			ctx.closePath();
+			ctx.stroke();
 
 			/* 	if (segmentos[i].direcao == 'frente') {
 				ctx.fillStyle = '#000';
@@ -97,8 +101,7 @@
 				ctx.fillRect(50, 50, 100, 100);
 			} */
 		}
-		ctx.stroke();
-		ctx.closePath();
+
 		/*
 		if (segmento.direcao == 'frente') {
 	 		ctx.fillStyle = '#000';
@@ -114,6 +117,26 @@
 			ctx.fillRect(50, 50, 100, 100);
 		}
  */
+	};
+	const prencherPontosIniciais = async (pontos) => {
+		var selectPontos = document.getElementById('pontosIniciais');
+		var option;
+		for (var i = 0; i <= pontos.length; i++) {
+			option = document.createElement('option');
+			option.value = pontos[i].ponto_inicial;
+			option.text = pontos[i].ponto_inicial;
+			selectPontos.appendChild(option);
+		}
+	};
+	const prencherPontosFinais = async (pontos) => {
+		var selectPontos = document.getElementById('pontosFinais');
+		var option;
+		for (var i = 0; i <= pontos.length; i++) {
+			option = document.createElement('option');
+			option.value = pontos[i].ponto_final;
+			option.text = pontos[i].ponto_final;
+			selectPontos.appendChild(option);
+		}
 	};
 </script>
 
@@ -133,6 +156,10 @@
 			bind:value={buscaRotas.destino}
 		/>
 	</div>
+	<div>
+		<select name="" id="pontosIniciais" />
+		<select name="" id="pontosFinais" />
+	</div>
 
 	<table
 		class="table table-bordered table-striped"
@@ -150,7 +177,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			{#each rotaReturn as rotai, i (rotai)}
+			{#each rotaReturn as rotai}
 				<tr>
 					<!-- <td class="text-center">{rotai.nome_rota}</td> -->
 					<td class="text-center">{rotai.nome}</td>
