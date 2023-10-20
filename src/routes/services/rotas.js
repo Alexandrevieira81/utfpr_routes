@@ -34,3 +34,21 @@ export const buscarAllRotas = async () => {
         return error.response
     }
 }
+
+export const buscarAllSegmentos = async () => {
+
+    try {
+        const token = sessionStorage.getItem('token')
+
+        let res = await axios.get('http://127.0.0.1:3000/segmentos',{
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return res
+    } catch (error) {
+        console.log(error);
+        return error.response
+    }
+}

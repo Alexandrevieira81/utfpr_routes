@@ -1,20 +1,21 @@
 <script>
 	import { goto } from '$app/navigation';
 
-	import { buscarRotas, buscarAllRotas } from '../services/rotas.js';
+	import { buscarRotas, buscarAllRotas, buscarAllSegmentos } from '../services/rotas.js';
 	import { onMount } from 'svelte';
 
 	let returnRotas;
 	let returnAllRotas;
+	let returnAllSegmentos;
 	let rotaReturn = [];
-	let pontos = [];
+
 	let buscaRotas = {};
 	var canva = null;
 	var ctx = null;
 	onMount(async () => {
 		canva = document.getElementById('rotaCanvas');
 		ctx = canva.getContext('2d');
-		allRota();
+		allSegmentos();
 	});
 
 	const rota = async () => {
@@ -52,8 +53,24 @@
 			pontos = returnAllRotas.data;
 
 			console.log(pontos);
-			prencherPontosIniciais(pontos);
-			prencherPontosFinais(pontos);
+		}
+	};
+
+	const allSegmentos = async () => {
+		returnAllSegmentos = null;
+		let listaIncial = [];
+		let listaFinal = [];
+		//post.password = md5(post.password);
+		returnAllSegmentos = await buscarAllSegmentos();
+
+		if (returnAllSegmentos.status == 200) {
+			for (let value of returnAllSegmentos.data) {
+				console.log(value.ponto_inicial);
+				if (!listaIncial.includes(value.ponto_inicial)) listaIncial.push(value.ponto_inicial);
+				if (!listaFinal.includes(value.ponto_final)) listaFinal.push(value.ponto_final);
+			}
+			prencherPontosIniciais(listaIncial);
+			prencherPontosFinais(listaFinal);
 		}
 	};
 
@@ -121,20 +138,20 @@
 	const prencherPontosIniciais = async (pontos) => {
 		var selectPontos = document.getElementById('pontosIniciais');
 		var option;
-		for (var i = 0; i <= pontos.length; i++) {
+		for (var i = 0; i < pontos.length; i++) {
 			option = document.createElement('option');
-			option.value = pontos[i].ponto_inicial;
-			option.text = pontos[i].ponto_inicial;
+			option.value = pontos[i];
+			option.text = pontos[i];
 			selectPontos.appendChild(option);
 		}
 	};
 	const prencherPontosFinais = async (pontos) => {
 		var selectPontos = document.getElementById('pontosFinais');
 		var option;
-		for (var i = 0; i <= pontos.length; i++) {
+		for (var i = 0; i < pontos.length; i++) {
 			option = document.createElement('option');
-			option.value = pontos[i].ponto_final;
-			option.text = pontos[i].ponto_final;
+			option.value = pontos[i];
+			option.text = pontos[i];
 			selectPontos.appendChild(option);
 		}
 	};
@@ -169,7 +186,7 @@
 		<thead>
 			<tr>
 				<!-- <th class="text-center">nome_rota</th> -->
-				<th class="text-center">nome</th>
+			
 				<th class="text-center">distancia</th>
 				<th class="text-center">partida</th>
 				<th class="text-center">chegada</th>
@@ -180,7 +197,7 @@
 			{#each rotaReturn as rotai}
 				<tr>
 					<!-- <td class="text-center">{rotai.nome_rota}</td> -->
-					<td class="text-center">{rotai.nome}</td>
+				
 					<td class="text-center">{rotai.distancia}</td>
 					<td class="text-center">{rotai.ponto_inicial}</td>
 					<td class="text-center">{rotai.ponto_final}</td>
