@@ -59,7 +59,7 @@ export const AtualizarUser = async (userRegistro) => {
 
     try {
         const token = sessionStorage.getItem('token')
-        let res = await axios.put('http://127.0.0.1:3000/usuarios',userRegistro, { headers: { Authorization: `Bearer ${token}` } });
+        let res = await axios.put('http://127.0.0.1:3000/usuarios',userRegistro, { headers: { Authorization: `Bearer ${token}` }});
         return res
     } catch (error) {
         console.log(" ERRO GET USUARIO: " + error);
