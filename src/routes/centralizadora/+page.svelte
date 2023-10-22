@@ -37,13 +37,9 @@
 	type="button"
 	class="btn text-white nav-link">Buscar Rotas</button
 >
-<button
-	on:click={() => {
-		goto('/user');
-	}}
-	type="button"
-	class="btn text-white nav-link">Cadastro de usuários</button
->
+<button on:click={() => {goto('/user');}} type="button"class="btn text-white nav-link">Cadastro de usuários</button>
+<button on:click={() => {goto('/segmentos');}} type="button"class="btn text-white nav-link">Cadastro de Segmentos</button>
+
 <div>
 	<button class="button" on:click={() => deslogar()}>Deslogar</button>
 </div>
