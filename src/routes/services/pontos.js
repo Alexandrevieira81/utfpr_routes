@@ -1,4 +1,5 @@
 import axios from 'axios';
+const baseURL = 'http://127.0.0.1:3000';
 
 
 export const cadastrarPonto = async (ponto) => {
@@ -6,7 +7,7 @@ export const cadastrarPonto = async (ponto) => {
 
     try {
         const token = sessionStorage.getItem('token')
-        let res = await axios.post('http://127.0.0.1:3000/pontos',ponto, { headers: { Authorization: `Bearer ${token}` } });
+        let res = await axios.post(baseURL+'/pontos',ponto, { headers: { Authorization: `Bearer ${token}` } });
         return res
     } catch (error) {
         console.log("ERRO AO CADASTRAR PONTO: " + error);
@@ -19,7 +20,7 @@ export const buscarPontos = async () => {
     try {
         const token = sessionStorage.getItem('token')
 
-        let res = await axios.get('http://127.0.0.1:3000/pontos',{
+        let res = await axios.get(baseURL+'/pontos',{
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`

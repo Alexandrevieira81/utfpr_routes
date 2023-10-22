@@ -1,4 +1,5 @@
 import axios from 'axios';
+const baseURL = 'http://127.0.0.1:3000';
 
 export const buscarRotas = async (rota) => {
 
@@ -7,7 +8,7 @@ export const buscarRotas = async (rota) => {
         const token = sessionStorage.getItem('token')
 
         
-        let res = await axios.post('http://127.0.0.1:3000/rotas',rota, {
+        let res = await axios.post(baseURL+'/rotas',rota, {
             headers: {"Content-Type": "application/json",Authorization: `Bearer ${token}`}
         });
         return res
@@ -22,7 +23,7 @@ export const buscarAllRotas = async () => {
     try {
         const token = sessionStorage.getItem('token')
 
-        let res = await axios.get('http://127.0.0.1:3000/rotas',{
+        let res = await axios.get(baseURL+'/rotas',{
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`
@@ -40,7 +41,7 @@ export const buscarAllSegmentos = async () => {
     try {
         const token = sessionStorage.getItem('token')
 
-        let res = await axios.get('http://127.0.0.1:3000/segmentos',{
+        let res = await axios.get(baseURL+'/segmentos',{
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`
