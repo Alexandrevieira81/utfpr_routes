@@ -1,5 +1,10 @@
 <script>
-	import { buscarSegmentos, cadastrarSegmento } from '../services/segmentos.js';
+	import {
+		buscarSegmentos,
+		cadastrarSegmento,
+		atualizarSegmento,
+		deletarSegmento
+	} from '../services/segmentos.js';
 	import { buscarPontos, cadastrarPonto } from '../services/pontos.js';
 	import { onMount } from 'svelte';
 
@@ -15,31 +20,56 @@
 	let returnPontos;
 	let pontosReturn = [];
 
+	let returnPontosCarregados;
+	let pontosReturnCarregados = [];
+
+	let editId = null;
+
 	onMount(async () => {
-		ponto();
+		iniciarPontos();
 	});
 
 	const inserirSegmento = async () => {
-		segmentosCadastrado = null;
+		try {
+			segmentosCadastrado = null;
+			let post = { ...dadosSegmentos };
+			const inicial = document.querySelector('#pontosIniciais');
+			const final = document.querySelector('#pontosFinais');
+			post.ponto_inicial = inicial.value;
+			post.ponto_final = final.value;
 
-		let post = { ...dadosSegmentos };
+			if (editId == null) {
+				segmentosCadastrado = await cadastrarSegmento(post);
 
-		const inicial = document.querySelector('#pontosIniciais');
-		const final = document.querySelector('#pontosFinais');
+				if (segmentosCadastrado.status == 200) {
+					document.getElementById('resultado').innerHTML = segmentosCadastrado.data.message;
+				} else {
+					document.getElementById('resultado').innerHTML = segmentosCadastrado.data.message;
+				}
+			} else {
+				console.log('Dentro do Post editar', post);
+				post.id = editId;
+				const distancia = document.querySelector('#distancia');
+				const direcao = document.querySelector('#direcao');
+				const status = document.querySelector('#status');
+				post.distancia = distancia.value;
+				post.direcao = direcao.value;
+				post.status = status.value;
 
-		//post.password = md5(post.password);
+				segmentosCadastrado = await atualizarSegmento(post);
 
-		post.ponto_inicial = inicial.value;
-		post.ponto_final = final.value;
-
-		console.log('Dentro do Post ', post);
-
-		segmentosCadastrado = await cadastrarSegmento(post);
-
-		if (segmentosCadastrado.status == 200) {
-			document.getElementById('resultado').innerHTML = segmentosCadastrado.data.message;
-		} else {
-			document.getElementById('resultado').innerHTML = segmentosCadastrado.data.message;
+				if (segmentosCadastrado.status == 200) {
+					document.getElementById('resultado').innerHTML = segmentosCadastrado.data.message;
+				} else {
+					document.getElementById('resultado').innerHTML = segmentosCadastrado.data.message;
+				}
+			}
+		} catch (error) {
+			console.log('Erro de Inserção ou Atualização do segmento');
+		} finally {
+			document.getElementById('btnCadastrar').innerText = 'Cadastrar';
+			editId = null;
+			segmento();
 		}
 	};
 
@@ -61,16 +91,43 @@
 		}
 	};
 
-    const atualizarPonto = async (ponto) => {
-        console.log(ponto," Pegou o atualizar");
-    }
-    const deletarPonto = async (id) => {
-        console.log(id," Pegou o deletar");
-    }
+	const putSegmento = async (ponto) => {
+		console.log(ponto, ' Pegou o atualizar');
 
-    
+		editId = ponto.id;
 
-    
+		let distancia = document.getElementById('distancia');
+		distancia.value = ponto.distancia;
+
+		let direcao = document.getElementById('direcao');
+		direcao.value = ponto.direcao;
+
+		let status = document.getElementById('status');
+		status.value = ponto.status;
+
+		let ponto_inicial = document.getElementById('pontosIniciais');
+		ponto_inicial.value = ponto.ponto_inicial;
+
+		let ponto_final = document.getElementById('pontosFinais');
+		ponto_final.value = ponto.ponto_final;
+
+		document.getElementById('btnCadastrar').innerText = 'Atualizar';
+	};
+	const delSegmento = async (id) => {
+		returnSegmentos = null;
+		if (confirm('Deseja Realmente Deletar o Segmento de Código ' + id)) {
+			returnSegmentos = await deletarSegmento(id);
+			console.log(returnSegmentos);
+			if (returnSegmentos.status == 200) {
+				document.getElementById('buscaSegmentos').innerHTML = returnSegmentos.data.message;
+				document.getElementById('buscaSegmentos').style.color = 'blue';
+				segmento();
+			} else {
+				document.getElementById('buscaSegmentos').innerHTML = returnSegmentos.data.message;
+				document.getElementById('buscaSegmentos').style.color = 'red';
+			}
+		}
+	};
 
 	const segmento = async () => {
 		returnSegmentos = null;
@@ -78,27 +135,43 @@
 		console.log(returnSegmentos);
 		if (returnSegmentos.status == 200) {
 			segmentoReturn = await returnSegmentos.data.segmentos;
-			document.getElementById('resultadoSegmentos').innerHTML = returnSegmentos.data.message;
-			document.getElementById('resultadoSegmentos').style.color = 'blue';
+			document.getElementById('buscaSegmentos').innerHTML = returnSegmentos.data.message;
+			document.getElementById('buscaSegmentos').style.color = 'blue';
 		} else {
-			document.getElementById('resultadoSegmentos').innerHTML = returnSegmentos.data.message;
-			document.getElementById('resultadoSegmentos').style.color = 'red';
+			document.getElementById('buscaSegmentos').innerHTML = returnSegmentos.data.message;
+			document.getElementById('buscaSegmentos').style.color = 'red';
 		}
 	};
 
-	const ponto = async () => {
+	const carregarPontos = async () => {
+		returnPontosCarregados = null;
+		returnPontosCarregados = await buscarPontos();
+
+		if (returnPontosCarregados.status == 200) {
+			console.log(returnPontosCarregados.data.pontos);
+			pontosReturnCarregados = await returnPontosCarregados.data.pontos;
+			document.getElementById('buscaPontos').innerHTML = returnPontosCarregados.data.message;
+			document.getElementById('buscaPontos').style.color = 'green';
+			console.log(pontosReturnCarregados);
+		} else {
+			document.getElementById('buscaPontos').style.color = 'red';
+			document.getElementById('buscaPontos').innerHTML = returnPontosCarregados.data.message;
+		}
+	};
+
+	const iniciarPontos = async () => {
 		returnPontos = null;
 		returnPontos = await buscarPontos();
 
 		if (returnPontos.status == 200) {
 			console.log(returnPontos.data.pontos);
 			pontosReturn = await returnPontos.data.pontos;
-			document.getElementById('resultadoPontos').innerHTML = returnPontos.data.message;
-			document.getElementById('resultadoPontos').style.color = 'green';
+			document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
+			document.getElementById('buscaPontos').style.color = 'green';
 			console.log(pontosReturn);
 		} else {
-			document.getElementById('resultadoPontos').style.color = 'red';
-			document.getElementById('resultadoPontos').innerHTML = returnPontos.data.message;
+			document.getElementById('buscaPontos').style.color = 'red';
+			document.getElementById('buscaPontos').innerHTML = returnPontos.data.message;
 		}
 		prencherPontosIniciais(pontosReturn);
 		prencherPontosFinais(pontosReturn);
@@ -132,16 +205,22 @@
 </h2>
 
 <p style="margin-top: 2px;">Distância:</p>
-<input type="text" name="" id="registro" bind:value={dadosSegmentos.distancia} />
+<input type="text" name="" id="distancia" bind:value={dadosSegmentos.distancia} />
 
 <p style="margin-top: 20px;">Direção:</p>
-<input type="text" name="" id="nome" style="margin-top: 2px;" bind:value={dadosSegmentos.direcao} />
+<input
+	type="text"
+	name=""
+	id="direcao"
+	style="margin-top: 2px;"
+	bind:value={dadosSegmentos.direcao}
+/>
 
 <p style="margin-top: 20px;">Status:</p>
 <input
 	type="number"
 	name=""
-	id="email"
+	id="status"
 	style="margin-top: 2px;"
 	bind:value={dadosSegmentos.status}
 />
@@ -154,6 +233,53 @@
 <div style="margin-top: 20px;">
 	<button class="button" id="btnCadastrar" type="button" on:click={() => inserirSegmento()}
 		>Cadastrar</button
+	>
+</div>
+<h2>
+	<p id="buscaSegmentos" style="margin-left: 20px;" />
+</h2>
+<div style="margin: 20px 20px 20px 20px;">
+	<table
+		id="tableSegmentos"
+		class="table table-bordered table-striped"
+		width="100%"
+		style="box-shadow: 0 10px 40px #00000056;"
+	>
+		<thead>
+			<tr>
+				<!-- <th class="text-center">nome_rota</th> -->
+				<th class="text-center">Código</th>
+				<th class="text-center">distancia</th>
+				<th class="text-center">partida</th>
+				<th class="text-center">chegada</th>
+				<th class="text-center">direcao</th>
+				<th class="text-center">status</th>
+			</tr>
+		</thead>
+		<tbody>
+			{#each segmentoReturn as segmentoi}
+				<tr>
+					<!-- <td class="text-center">{rotai.nome_rota}</td> -->
+					<td class="text-center">{segmentoi.id}</td>
+					<td class="text-center">{segmentoi.distancia}</td>
+					<td class="text-center">{segmentoi.ponto_inicial}</td>
+					<td class="text-center">{segmentoi.ponto_final}</td>
+					<td class="text-center">{segmentoi.direcao}</td>
+					<td class="text-center">{segmentoi.status}</td>
+					<td class="text-center"
+						><button class="button" on:click={() => putSegmento(segmentoi)}>Atualizar</button></td
+					>
+					<td class="text-center"
+						><button class="button" on:click={() => delSegmento(segmentoi.id)}>Deletar</button></td
+					>
+				</tr>
+			{/each}
+		</tbody>
+	</table>
+</div>
+<div>
+	<button style="margin-left: 20px;" class="button" on:click={() => segmento()}
+		>Buscar Segmentos</button
 	>
 </div>
 
@@ -171,57 +297,7 @@
 </div>
 
 <h2>
-	<p id="resultadoSegmentos" style="margin-left: 20px;" />
-</h2>
-
-<div style="margin: 20px 20px 20px 20px;">
-	<table
-		id="tableSegmentos"
-		class="table table-bordered table-striped"
-		width="100%"
-		style="box-shadow: 0 10px 40px #00000056;"
-	>
-		<thead>
-			<tr>
-				<!-- <th class="text-center">nome_rota</th> -->
-                <th class="text-center">Código</th>
-				<th class="text-center">distancia</th>
-				<th class="text-center">partida</th>
-				<th class="text-center">chegada</th>
-				<th class="text-center">direcao</th>
-				<th class="text-center">status</th>
-			</tr>
-		</thead>
-		<tbody>
-			{#each segmentoReturn as segmentoi}
-				<tr>
-					<!-- <td class="text-center">{rotai.nome_rota}</td> -->
-                    <td class="text-center">{segmentoi.id}</td>
-					<td class="text-center">{segmentoi.distancia}</td>
-					<td class="text-center">{segmentoi.ponto_inicial}</td>
-					<td class="text-center">{segmentoi.ponto_final}</td>
-					<td class="text-center">{segmentoi.direcao}</td>
-					<td class="text-center">{segmentoi.status}</td>
-					<td class="text-center"
-						><button class="button" on:click={() => atualizarPonto(segmentoi)}>Atualizar</button></td
-					>
-					<td class="text-center"
-						><button class="button" on:click={() => deletarPonto(segmentoi.id)}>Deletar</button></td
-					>
-				</tr>
-			{/each}
-		</tbody>
-	</table>
-</div>
-
-<div>
-	<button style="margin-left: 20px;" class="button" on:click={() => segmento()}
-		>Buscar Segmentos</button
-	>
-</div>
-
-<h2>
-	<p id="resultadoPontos" style="margin-left: 20px;" />
+	<p id="buscaPontos" style="margin-left: 20px;" />
 </h2>
 
 <div style="margin: 20px 20px 20px 20px;">
@@ -240,7 +316,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			{#each pontosReturn as pontoi}
+			{#each pontosReturnCarregados as pontoi}
 				<tr>
 					<!-- <td class="text-center">{rotai.nome_rota}</td> -->
 
@@ -253,5 +329,7 @@
 </div>
 
 <div>
-	<button style="margin-left: 20px;" class="button" on:click={() => ponto()}>Buscar Pontos</button>
+	<button style="margin-left: 20px;" class="button" on:click={() => carregarPontos()}
+		>Buscar Pontos</button
+	>
 </div>
