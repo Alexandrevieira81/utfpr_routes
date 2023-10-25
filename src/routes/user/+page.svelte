@@ -21,7 +21,7 @@
 		returnUser = null;
 
 		let post = { ...user };
-		post.senha = md5(post.senha);
+		//post.senha = md5(post.senha);
 		returnUser = await cadastrarUser(post);
 
 		if (returnUser.status == 200) {
@@ -38,7 +38,7 @@
 
 		let post = { ...user };
 
-		post.senha = md5(post.senha);
+		//post.senha = md5(post.senha);
 
 		returnUser = await AtualizarUser(post);
 		console.log(returnUser);
