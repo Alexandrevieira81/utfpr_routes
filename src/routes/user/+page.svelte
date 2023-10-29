@@ -35,6 +35,7 @@
 			console.log(returnUser.data);
 			if (returnUser.status == 200) {
 				alert(returnUser.data.message);
+				cancelar();
 			} else if (returnUser.status == 401) {
 				alert(returnUser.data.message);
 				limparSessao();
@@ -45,7 +46,6 @@
 			alert('Erro Fora do Protocolo');
 		} finally {
 			buscarAll();
-			cancelar();
 		}
 	};
 
@@ -64,6 +64,7 @@
 	};
 
 	const preparaAtualizar = async (usuario) => {
+		getId.registro = usuario.registro;
 		let btnCadastrar = document.getElementById('btnCadastrar');
 		btnCadastrar.disabled = true;
 		let btnAtualizar = document.getElementById('btnAtualizar');
@@ -74,21 +75,12 @@
 		btnNovo.disabled = true;
 		let btnCancelar = document.getElementById('btnCancelar');
 		btnCancelar.disabled = false;
-		let registro = document.getElementById('registro');
-		registro.value = usuario.registro;
-		let nome = document.getElementById('nome');
-		nome.value = usuario.nome;
-		let email = document.getElementById('email');
-		email.value = usuario.email;
-		let senha = document.getElementById('senha');
-		senha.value = '';
-		let tipo = document.getElementById('tipo');
-		tipo.value = usuario.tipo_usuario;
+		buscar();
 	};
 
 	const preparaDeletar = async (usuario) => {
 		console.log(usuario, ' Pegou o deletar');
-
+		getId.registro = usuario.registro;
 		let btnCadstrar = document.getElementById('btnCadastrar');
 		btnCadstrar.disabled = true;
 		let btnAtualizar = document.getElementById('btnAtualizar');
@@ -99,16 +91,7 @@
 		btnNovo.disabled = true;
 		let btnCancelar = document.getElementById('btnCancelar');
 		btnCancelar.disabled = false;
-		let registro = document.getElementById('registro');
-		registro.value = usuario.registro;
-		let nome = document.getElementById('nome');
-		nome.value = usuario.nome;
-		let email = document.getElementById('email');
-		email.value = usuario.email;
-		let senha = document.getElementById('senha');
-		senha.value = '';
-		let tipo = document.getElementById('tipo');
-		tipo.value = usuario.tipo_usuario;
+		buscar();
 	};
 
 	const atualizar = async () => {
@@ -119,6 +102,12 @@
 
 			if (returnUser.status == 200) {
 				alert(returnUser.data.message);
+				cancelar();
+				user.registro = '';
+				user.nome = '';
+				user.email = '';
+				user.senha = '';
+				user.tipo_usuario = '';
 			} else if (returnUser.status == 401) {
 				limparSessao();
 			} else {
@@ -128,7 +117,7 @@
 			alert('Erro Fora do Protocolo');
 		} finally {
 			buscarAll();
-			cancelar();
+			//cancelar();
 		}
 	};
 
@@ -141,7 +130,13 @@
 			returnUser = await DeletarUser(post);
 			console.log(returnUser);
 			if (returnUser.status == 200) {
+				cancelar();
 				alert(returnUser.data.message);
+				user.registro = '';
+				user.nome = '';
+				user.email = '';
+				user.senha = '';
+				user.tipo_usuario = '';
 			} else if (returnUser.status == 401) {
 				limparSessao();
 			} else {
@@ -187,20 +182,21 @@
 				document.getElementById('resultado').style.color = 'blue';
 				document.getElementById('resultado').innerHTML = returnUser.data.message;
 
-				let registro = document.getElementById('registro');
-				registro.value = returnUser.data.usuarios.registro;
-
-				let nome = document.getElementById('nome');
-				nome.value = returnUser.data.usuarios.nome;
-
-				let email = document.getElementById('email');
-				email.value = returnUser.data.usuarios.email;
-
-				let senha = document.getElementById('senha');
-				senha.value = '';
-
-				let tipo = document.getElementById('tipo');
-				tipo.value = returnUser.data.usuarios.tipo_usuario;
+				/* let registro = document.getElementById('registro');
+				registro.value = returnUser.data.usuarios.registro; */
+				user.registro = returnUser.data.usuarios.registro;
+				/* let nome = document.getElementById('nome');
+				nome.value = returnUser.data.usuarios.nome; */
+				user.nome = returnUser.data.usuarios.nome;
+				/* let email = document.getElementById('email');
+				email.value = returnUser.data.usuarios.email; */
+				user.email = returnUser.data.usuarios.email;
+				/* let senha = document.getElementById('senha');
+				senha.value = ''; */
+				user.senha = '';
+				/* let tipo = document.getElementById('tipo');
+				tipo.value = returnUser.data.usuarios.tipo_usuario; */
+				user.tipo_usuario = returnUser.data.usuarios.tipo_usuario;
 
 				let btnCadastrar = document.getElementById('btnCadastrar');
 				btnCadastrar.disabled = true;
