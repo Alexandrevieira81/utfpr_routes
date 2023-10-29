@@ -160,6 +160,9 @@
 <section class="telarotas">
 	<div class="telarotas_wrapper rotas">
 		<h1>Welcome to the Jungle</h1>
+		<div>
+			<a href="/centralizadora">Home</a>
+		</div>
 		<p style="margin-top: 2px;">INICIO:</p>
 		<input type="text" name="" id="" placeholder="Portaria" bind:value={buscaRotas.origem} />
 
@@ -225,9 +228,7 @@
 		</div>
 		-->
 
-	<div>
-		<a href="/centralizadora">Voltar</a>
-	</div>
+
 </section>
 
 <style>

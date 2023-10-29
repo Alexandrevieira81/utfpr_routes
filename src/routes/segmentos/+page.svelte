@@ -200,6 +200,10 @@
 </script>
 
 <h1>SEGMENTOS</h1>
+<div>
+	<a href="/centralizadora">Home</a>
+</div>
+
 <h2>
 	<p id="resultado" style="margin-left: 20px;" />
 </h2>

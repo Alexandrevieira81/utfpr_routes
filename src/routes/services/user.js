@@ -55,6 +55,19 @@ export const buscarUser = async (userRegistro) => {
     }
 }
 
+export const buscarAllUser = async () => {
+   
+
+    try {
+        const token = sessionStorage.getItem('token')
+        let res = await axios.get(baseURL+'/usuarios', { headers: { Authorization: `Bearer ${token}` } });
+        return res
+    } catch (error) {
+        console.log(" ERRO GET USUARIO: " + error);
+        return error.response
+    }
+}
+
 export const AtualizarUser = async (userRegistro) => {
     console.log(userRegistro);
 
@@ -63,7 +76,7 @@ export const AtualizarUser = async (userRegistro) => {
         let res = await axios.put(baseURL+'/usuarios',userRegistro, { headers: { Authorization: `Bearer ${token}` }});
         return res
     } catch (error) {
-        console.log(" ERRO GET USUARIO: " + error);
+        console.log(" ERRO PUT USUARIO: " + error);
         return error.response
     }
 }

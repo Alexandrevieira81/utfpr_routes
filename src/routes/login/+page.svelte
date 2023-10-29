@@ -28,7 +28,7 @@
 			};
 			sessionStorage.setItem('user', JSON.stringify(userReturn)); //Aqui ainda só pega o status boleano e o msg de retorno
 			sessionStorage.setItem('token', returnLogin.data.token);
-			document.getElementById('resultado').innerHTML = userReturn.message;
+			alert(userReturn.message);
 
 			setTimeout(() => {
 				goto('/centralizadora');
@@ -38,7 +38,7 @@
 				success: returnLogin.data.success,
 				message: returnLogin.data.message
 			};
-			document.getElementById('resultado').innerHTML = userReturn.message;
+			alert(userReturn.message);
 		}
 	};
 </script>

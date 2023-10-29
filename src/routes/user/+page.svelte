@@ -1,107 +1,225 @@
 <script>
-	import { cadastrarUser, buscarUser, AtualizarUser, DeletarUser } from '../services/user.js';
+	import {
+		cadastrarUser,
+		buscarUser,
+		AtualizarUser,
+		DeletarUser,
+		buscarAllUser
+	} from '../services/user.js';
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 	import md5 from 'md5';
 
 	let returnUser;
-	//let userReturn = [];
+	let userReturn = [];
 	let user = {};
 	let getId = {};
 
 	onMount(async () => {
+		let btnCadastrar = document.getElementById('btnCadastrar');
+		btnCadastrar.disabled = true;
+		let btnAtualizar = document.getElementById('btnAtualizar');
+		btnAtualizar.disabled = true;
+		let btnDeletar = document.getElementById('btnDeletar');
+		btnDeletar.disabled = true;
+		let btnCancelar = document.getElementById('btnCancelar');
+		btnCancelar.disabled = true;
+		buscarAll();
+	});
+	const cadastrar = async () => {
+		returnUser = null;
+		try {
+			let post = { ...user };
+			//post.senha = md5(post.senha);
+			returnUser = await cadastrarUser(post);
+			console.log(returnUser.data);
+			if (returnUser.status == 200) {
+				alert(returnUser.data.message);
+			} else if (returnUser.status == 401) {
+				alert(returnUser.data.message);
+				limparSessao();
+			} else {
+				alert(returnUser.data.message);
+			}
+		} catch (error) {
+			alert('Erro Fora do Protocolo');
+		} finally {
+			buscarAll();
+			cancelar();
+		}
+	};
+
+	const cancelar = async () => {
 		let btnCadstrar = document.getElementById('btnCadastrar');
 		btnCadstrar.disabled = true;
 		let btnAtualizar = document.getElementById('btnAtualizar');
 		btnAtualizar.disabled = true;
 		let btnDeletar = document.getElementById('btnDeletar');
 		btnDeletar.disabled = true;
-	});
+		let btnCancelar = document.getElementById('btnCancelar');
+		btnCancelar.disabled = true;
+		let btnNovo = document.getElementById('btnNovo');
+		btnNovo.disabled = false;
+		document.getElementById('resultado').innerHTML = '';
+	};
 
-	const cadastrar = async () => {
-		returnUser = null;
+	const preparaAtualizar = async (usuario) => {
+		let btnCadastrar = document.getElementById('btnCadastrar');
+		btnCadastrar.disabled = true;
+		let btnAtualizar = document.getElementById('btnAtualizar');
+		btnAtualizar.disabled = false;
+		let btnDeletar = document.getElementById('btnDeletar');
+		btnDeletar.disabled = true;
+		let btnNovo = document.getElementById('btnNovo');
+		btnNovo.disabled = true;
+		let btnCancelar = document.getElementById('btnCancelar');
+		btnCancelar.disabled = false;
+		let registro = document.getElementById('registro');
+		registro.value = usuario.registro;
+		let nome = document.getElementById('nome');
+		nome.value = usuario.nome;
+		let email = document.getElementById('email');
+		email.value = usuario.email;
+		let senha = document.getElementById('senha');
+		senha.value = '';
+		let tipo = document.getElementById('tipo');
+		tipo.value = usuario.tipo_usuario;
+	};
 
-		let post = { ...user };
-		//post.senha = md5(post.senha);
-		returnUser = await cadastrarUser(post);
+	const preparaDeletar = async (usuario) => {
+		console.log(usuario, ' Pegou o deletar');
 
-		if (returnUser.status == 200) {
-			document.getElementById('resultado').innerHTML = returnUser.data.message;
-			let btnCadastrar = document.getElementById('btnCadastrar');
-			btnCadastrar.disabled = false;
-		} else {
-			document.getElementById('resultado').innerHTML = returnUser.data.message;
-		}
+		let btnCadstrar = document.getElementById('btnCadastrar');
+		btnCadstrar.disabled = true;
+		let btnAtualizar = document.getElementById('btnAtualizar');
+		btnAtualizar.disabled = true;
+		let btnDeletar = document.getElementById('btnDeletar');
+		btnDeletar.disabled = false;
+		let btnNovo = document.getElementById('btnNovo');
+		btnNovo.disabled = true;
+		let btnCancelar = document.getElementById('btnCancelar');
+		btnCancelar.disabled = false;
+		let registro = document.getElementById('registro');
+		registro.value = usuario.registro;
+		let nome = document.getElementById('nome');
+		nome.value = usuario.nome;
+		let email = document.getElementById('email');
+		email.value = usuario.email;
+		let senha = document.getElementById('senha');
+		senha.value = '';
+		let tipo = document.getElementById('tipo');
+		tipo.value = usuario.tipo_usuario;
 	};
 
 	const atualizar = async () => {
-		
+		try {
+			let post = { ...user };
+			//post.senha = md5(post.senha);
+			returnUser = await AtualizarUser(post);
 
-		let post = { ...user };
-
-		//post.senha = md5(post.senha);
-
-		returnUser = await AtualizarUser(post);
-		console.log(returnUser);
-		if (returnUser.status == 200) {
-			document.getElementById('resultado').innerHTML = returnUser.data.message;
-			let btnAtualizar = document.getElementById('btnAtualizar');
-			btnAtualizar.disabled = true;
-			let btnDeletar = document.getElementById('btnAtualizar');
-			btnDeletar.disabled = true;
-		} else {
-			document.getElementById('resultado').innerHTML = returnUser.data.message;
+			if (returnUser.status == 200) {
+				alert(returnUser.data.message);
+			} else if (returnUser.status == 401) {
+				limparSessao();
+			} else {
+				alert(returnUser.data.message);
+			}
+		} catch (error) {
+			alert('Erro Fora do Protocolo');
+		} finally {
+			buscarAll();
+			cancelar();
 		}
 	};
 
 	const deletar = async () => {
 		returnUser = null;
 
-		let post = user.registro;
-		let senha = prompt('Digite sua senha para confirmar');
-		returnUser = await DeletarUser(post);
-		console.log(returnUser);
-		if (returnUser.status == 200) {
-			document.getElementById('resultado').innerHTML = returnUser.data.message;
-			let btnAtualizar = document.getElementById('btnAtualizar');
-			btnAtualizar.disabled = true;
-			let btnDeletar = document.getElementById('btnDeletar');
-			btnDeletar.disabled = true;
-		} else {
-			document.getElementById('resultado').innerHTML = returnUser.data.message;
+		try {
+			let post = user.registro;
+			let senha = prompt('Digite sua senha para confirmar');
+			returnUser = await DeletarUser(post);
+			console.log(returnUser);
+			if (returnUser.status == 200) {
+				alert(returnUser.data.message);
+			} else if (returnUser.status == 401) {
+				limparSessao();
+			} else {
+				alert(returnUser.data.message);
+			}
+		} catch (error) {
+			alert('Erro Fora do Protocolo');
+		} finally {
+			buscarAll();
+			cancelar();
+		}
+	};
+
+	const buscarAll = async () => {
+		returnUser = null;
+
+		try {
+			returnUser = await buscarAllUser();
+			console.log(returnUser);
+			if (returnUser.status == 200) {
+				userReturn = await returnUser.data.usuarios;
+				/* document.getElementById('resultado').innerHTML = returnUser.data.message;
+				document.getElementById('resultado').style.color = 'blue'; */
+			} else if (returnUser.status == 401) {
+				limparSessao();
+			} else {
+				document.getElementById('resultado').innerHTML = returnUser.data.message;
+				document.getElementById('resultado').style.color = 'red';
+			}
+		} catch (error) {
+			document.getElementById('resultado').style.color = 'red';
+			document.getElementById('resultado').innerHTML = 'Erro Fora do Protocolo';
 		}
 	};
 
 	const buscar = async () => {
 		returnUser = null;
 
-		returnUser = await buscarUser(getId.registro);
-		console.log(returnUser);
-		if (returnUser.status == 200) {
-			document.getElementById('resultado').innerHTML = returnUser.data.message;
+		try {
+			returnUser = await buscarUser(getId.registro);
+			console.log(returnUser);
+			if (returnUser.status == 200) {
+				document.getElementById('resultado').style.color = 'blue';
+				document.getElementById('resultado').innerHTML = returnUser.data.message;
 
-			let registro = document.getElementById('registro');
-			registro.value = returnUser.data.usuarios.registro;
+				let registro = document.getElementById('registro');
+				registro.value = returnUser.data.usuarios.registro;
 
-			let nome = document.getElementById('nome');
-			nome.value = returnUser.data.usuarios.nome;
+				let nome = document.getElementById('nome');
+				nome.value = returnUser.data.usuarios.nome;
 
-			let email = document.getElementById('email');
-			email.value = returnUser.data.usuarios.email;
+				let email = document.getElementById('email');
+				email.value = returnUser.data.usuarios.email;
 
-			let senha = document.getElementById('senha');
-			senha.value = '';
+				let senha = document.getElementById('senha');
+				senha.value = '';
 
-			let tipo = document.getElementById('tipo');
-			tipo.value = returnUser.data.usuarios.tipo_usuario;
+				let tipo = document.getElementById('tipo');
+				tipo.value = returnUser.data.usuarios.tipo_usuario;
 
-			let btnCadastrar = document.getElementById('btnCadastrar');
-			btnCadastrar.disabled = true;
-			let btnAtualizar = document.getElementById('btnAtualizar');
-			btnAtualizar.disabled = false;
-			let btnDeletar = document.getElementById('btnDeletar');
-			btnDeletar.disabled = false;
-		} else {
-			document.getElementById('resultado').innerHTML = returnUser.data.message;
+				let btnCadastrar = document.getElementById('btnCadastrar');
+				btnCadastrar.disabled = true;
+				let btnAtualizar = document.getElementById('btnAtualizar');
+				btnAtualizar.disabled = false;
+				let btnDeletar = document.getElementById('btnDeletar');
+				btnDeletar.disabled = false;
+				let btnNovo = document.getElementById('btnNovo');
+				btnNovo.disabled = true;
+				let btnCancelar = document.getElementById('btnCancelar');
+				btnCancelar.disabled = false;
+			} else if (returnUser.status == 401) {
+				limparSessao();
+			} else {
+				document.getElementById('resultado').style.color = 'red';
+				document.getElementById('resultado').innerHTML = returnUser.data.message;
+			}
+		} catch (error) {
+			alert('Erro Fora do Protocolo');
 		}
 	};
 
@@ -112,6 +230,10 @@
 		btnAtualizar.disabled = true;
 		let btnDeletar = document.getElementById('btnDeletar');
 		btnDeletar.disabled = true;
+		let btnNovo = document.getElementById('btnNovo');
+		btnNovo.disabled = true;
+		let btnCancelar = document.getElementById('btnCancelar');
+		btnCancelar.disabled = false;
 		let registro = document.getElementById('registro');
 		registro.value = '';
 		let nome = document.getElementById('nome');
@@ -123,11 +245,21 @@
 		let tipo = document.getElementById('tipo');
 		tipo.value = '';
 	};
+	const limparSessao = async () => {
+		sessionStorage.removeItem('user');
+		sessionStorage.removeItem('token');
+		document.getElementById('resultado').innerHTML =
+			'Usuário não Autenticado, Você Será Redirecionado para o Login';
+		setTimeout(() => {
+			goto('/');
+		}, 2000);
+	};
 </script>
 
 <section class="telaCadastroUsuario">
 	<div class="telaCadastroUsuario_wrapper usuario">
 		<h1>Welcome to the Jungle</h1>
+		<a href="/centralizadora">Home</a>
 
 		<div>
 			<input type="text" name="" id="buscarRegistro" bind:value={getId.registro} />
@@ -170,9 +302,45 @@
 			>Atualizar</button
 		>
 		<button class="button" id="btnDeletar" type="button" on:click={() => deletar()}>Deletar</button>
+		<button class="button" id="btnCancelar" type="button" on:click={() => cancelar()}
+			>Cancelar</button
+		>
 	</div>
-	<div>
-		<a href="/centralizadora">Voltar</a>
+	<div style="margin: 20px 20px 20px 20px;">
+		<table
+			id="tableUsuarios"
+			class="table table-bordered table-striped"
+			width="100%"
+			style="box-shadow: 0 10px 40px #00000056;"
+		>
+			<thead>
+				<tr>
+					<!-- <th class="text-center">nome_rota</th> -->
+					<th class="text-center">Registro</th>
+					<th class="text-center">Nome</th>
+					<th class="text-center">Email</th>
+					<th class="text-center">Tipo</th>
+				</tr>
+			</thead>
+			<tbody>
+				{#each userReturn as useri}
+					<tr>
+						<!-- <td class="text-center">{rotai.nome_rota}</td> -->
+						<td class="text-center">{useri.registro}</td>
+						<td class="text-center">{useri.nome}</td>
+						<td class="text-center">{useri.email}</td>
+
+						<td class="text-center"
+							><button class="button" on:click={() => preparaAtualizar(useri)}>Atualizar</button
+							></td
+						>
+						<td class="text-center"
+							><button class="button" on:click={() => preparaDeletar(useri)}>Deletar</button></td
+						>
+					</tr>
+				{/each}
+			</tbody>
+		</table>
 	</div>
 </section>
 

@@ -7,20 +7,18 @@
 		if (res.status == 200) {
 			sessionStorage.removeItem('user');
 			sessionStorage.removeItem('token');
-			document.getElementById('resultado').innerHTML = "Deslogado Com Sucesso";
+			document.getElementById('resultado').innerHTML = 'Deslogado Com Sucesso';
 			setTimeout(() => {
 				goto('/');
 			}, 2000);
-		}else{
-               sessionStorage.removeItem('user');
+		} else {
+			sessionStorage.removeItem('user');
 			sessionStorage.removeItem('token');
-			document.getElementById('resultado').innerHTML = "Usuário não Autenticado";
+			document.getElementById('resultado').innerHTML = 'Usuário não Autenticado';
 			setTimeout(() => {
 				goto('/');
 			}, 2000);
-
-          }
-		
+		}
 	};
 </script>
 
@@ -37,8 +35,20 @@
 	type="button"
 	class="btn text-white nav-link">Buscar Rotas</button
 >
-<button on:click={() => {goto('/user');}} type="button"class="btn text-white nav-link">Cadastro de usuários</button>
-<button on:click={() => {goto('/segmentos');}} type="button"class="btn text-white nav-link">Cadastro de Segmentos</button>
+<button
+	on:click={() => {
+		goto('/user');
+	}}
+	type="button"
+	class="btn text-white nav-link">Cadastro de usuários</button
+>
+<button
+	on:click={() => {
+		goto('/segmentos');
+	}}
+	type="button"
+	class="btn text-white nav-link">Cadastro de Segmentos</button
+>
 
 <div>
 	<button class="button" on:click={() => deslogar()}>Deslogar</button>

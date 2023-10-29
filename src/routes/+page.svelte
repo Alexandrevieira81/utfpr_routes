@@ -10,7 +10,7 @@
             document.getElementById('resultado').innerHTML = " Usuário Autenticado Será Direcionado Para Página Principal";
             setTimeout(() => {
 				goto('/centralizadora');
-			}, 2000);
+			}, 3000);
 			
 		} else {
 			goto('/');
