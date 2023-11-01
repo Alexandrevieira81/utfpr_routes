@@ -30,7 +30,7 @@
 		returnUser = null;
 		try {
 			let post = { ...user };
-			//post.senha = md5(post.senha);
+			post.senha = md5(post.senha);
 			returnUser = await cadastrarUser(post);
 			console.log(returnUser.data);
 			if (returnUser.status == 200) {
@@ -97,7 +97,7 @@
 	const atualizar = async () => {
 		try {
 			let post = { ...user };
-			//post.senha = md5(post.senha);
+			post.senha = md5(post.senha);
 			returnUser = await AtualizarUser(post);
 
 			if (returnUser.status == 200) {

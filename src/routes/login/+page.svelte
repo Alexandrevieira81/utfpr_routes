@@ -15,7 +15,7 @@
 		returnLogin = null;
 		returnCadastro = null;
 		let post = { ...userLogin };
-		//post.senha = md5(post.senha);
+		post.senha = md5(post.senha);
 		var userReturn;
 
 		//post.password = md5(post.password);
