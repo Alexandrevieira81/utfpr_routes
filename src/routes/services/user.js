@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseURL = 'http://25.64.61.9:22000';
+const baseURL = 'http://10.20.8.186:22000';
 
 export const loginUser = async (user) => {
 
@@ -73,7 +73,7 @@ export const AtualizarUser = async (userRegistro) => {
 
     try {
         const token = sessionStorage.getItem('token')
-        let res = await axios.put(baseURL+'/usuarios',userRegistro, { headers: { Authorization: `Bearer ${token}` }});
+        let res = await axios.put(baseURL+'/usuarios/'+userRegistro.registro,userRegistro, { headers: { Authorization: `Bearer ${token}` }});
         return res
     } catch (error) {
         console.log(" ERRO PUT USUARIO: " + error);

@@ -184,19 +184,19 @@
 
 				/* let registro = document.getElementById('registro');
 				registro.value = returnUser.data.usuarios.registro; */
-				user.registro = returnUser.data.usuarios.registro;
+				user.registro = returnUser.data.usuario.registro;
 				/* let nome = document.getElementById('nome');
 				nome.value = returnUser.data.usuarios.nome; */
-				user.nome = returnUser.data.usuarios.nome;
+				user.nome = returnUser.data.usuario.nome;
 				/* let email = document.getElementById('email');
 				email.value = returnUser.data.usuarios.email; */
-				user.email = returnUser.data.usuarios.email;
+				user.email = returnUser.data.usuario.email;
 				/* let senha = document.getElementById('senha');
 				senha.value = ''; */
 				user.senha = '';
 				/* let tipo = document.getElementById('tipo');
 				tipo.value = returnUser.data.usuarios.tipo_usuario; */
-				user.tipo_usuario = returnUser.data.usuarios.tipo_usuario;
+				user.tipo_usuario = returnUser.data.usuario.tipo_usuario;
 
 				let btnCadastrar = document.getElementById('btnCadastrar');
 				btnCadastrar.disabled = true;
@@ -325,6 +325,12 @@
 						<td class="text-center">{useri.registro}</td>
 						<td class="text-center">{useri.nome}</td>
 						<td class="text-center">{useri.email}</td>
+						{#if (useri.tipo_usuario == 1)} 
+						<td class="text-center">Administrador</td>
+				   {/if}
+				   {#if (useri.tipo_usuario == 0)} 
+						 <td class="text-center">Usuário Comum</td>
+				   {/if}
 
 						<td class="text-center"
 							><button class="button" on:click={() => preparaAtualizar(useri)}>Atualizar</button
