@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseURL = 'http://10.20.8.186:22000';
+const baseURL = 'http://127.0.0.1:3000';
 
 export const loginUser = async (user) => {
 
