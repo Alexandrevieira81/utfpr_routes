@@ -21,7 +21,7 @@
 		//post.password = md5(post.password);
 
 		returnLogin = await loginUser(post);
-		console.log(returnLogin);
+		console.log(returnLogin.data);
 		if ((returnLogin.status == 200) && (returnLogin.data.success == true)) {
 			userReturn = {
 				success: returnLogin.data.success,

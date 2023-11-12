@@ -97,8 +97,13 @@
 	const atualizar = async () => {
 		try {
 			let post = { ...user };
+			let postRegistro;
 			post.senha = md5(post.senha);
-			returnUser = await AtualizarUser(post);
+			postRegistro = post.registro;
+			delete post.tipo_usuario;
+			delete post.registro;
+			returnUser = await AtualizarUser(post,postRegistro);
+			console.log(returnUser.data);
 
 			if (returnUser.status == 200) {
 				alert(returnUser.data.message);
@@ -128,7 +133,7 @@
 			let post = user.registro;
 			let senha = prompt('Digite sua senha para confirmar');
 			returnUser = await DeletarUser(post);
-			console.log(returnUser);
+			console.log(returnUser.data);
 			if (returnUser.status == 200) {
 				cancelar();
 				alert(returnUser.data.message);
@@ -155,7 +160,7 @@
 
 		try {
 			returnUser = await buscarAllUser();
-			console.log(returnUser);
+			console.log(returnUser.data);
 			if (returnUser.status == 200) {
 				userReturn = await returnUser.data.usuarios;
 				/* document.getElementById('resultado').innerHTML = returnUser.data.message;
@@ -325,12 +330,12 @@
 						<td class="text-center">{useri.registro}</td>
 						<td class="text-center">{useri.nome}</td>
 						<td class="text-center">{useri.email}</td>
-						{#if (useri.tipo_usuario == 1)} 
-						<td class="text-center">Administrador</td>
-				   {/if}
-				   {#if (useri.tipo_usuario == 0)} 
-						 <td class="text-center">Usuário Comum</td>
-				   {/if}
+						{#if useri.tipo_usuario == 1}
+							<td class="text-center">Administrador</td>
+						{/if}
+						{#if useri.tipo_usuario == 0}
+							<td class="text-center">Usuário Comum</td>
+						{/if}
 
 						<td class="text-center"
 							><button class="button" on:click={() => preparaAtualizar(useri)}>Atualizar</button

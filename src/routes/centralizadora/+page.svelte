@@ -4,6 +4,7 @@
 
 	const deslogar = async () => {
 		var res = await deslogarUser();
+		console.log(res.data);
 		if (res.status == 200) {
 			sessionStorage.removeItem('user');
 			sessionStorage.removeItem('token');
